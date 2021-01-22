@@ -1,0 +1,19 @@
+{
+  "name": "taitava/php-cachedcall",
+  "description": "A simple PHP trait that makes it easy to cache class method call results within a single session.",
+  "keywords": [
+    "php",
+    "cache",
+    "method call",
+    "function call"
+  ],
+  "license": "MIT",
+  "require": {
+    "php": "^7.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Taitava\\CachedCall\\": "src"
+    }
+  }
+}
