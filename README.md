@@ -66,7 +66,7 @@ So we have two methods (plus a contructor) and we would like to cache both of th
 ```php
 class Page
 {
-  use CachedCallTrait; // Apply the trait for this class.
+  use Taitava\CachedCall\CachedCallTrait; // Apply the trait for this class.
 
   public $template = "page_template.html";
   public $title;
@@ -137,7 +137,7 @@ To overcome some of the limitations, you can for example bypass an array paramet
 ```php
 class Page
 {
-  use CachedCallTrait; // Apply the trait for this class.
+  use Taitava\CachedCall\CachedCallTrait; // Apply the trait for this class.
 
   public $template = "page_template.html";
   public $title;
