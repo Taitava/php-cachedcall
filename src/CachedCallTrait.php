@@ -41,7 +41,7 @@ trait CachedCallTrait
 		
 		// Check if we already have a cached result
 		$cache_key = static::_cache_key($method_name, $parameters);
-		if (isset($this->_cached_calls[$cache_key]))
+		if (array_key_exists($cache_key, $this->_cached_calls)) // Do not use isset() because it would falsely say that cache doesn't exist if a previous call had returned null / was void.
 		{
 			// A previous function call with the same parameters exists.
 			// Return the cached result
@@ -76,7 +76,7 @@ trait CachedCallTrait
 		
 		// Check if we already have a cached result
 		$cache_key = static::_cache_key($method_name, $parameters);
-		if (isset(static::$_cached_static_calls[$cache_key]))
+		if (array_key_exists($cache_key, static::$_cached_static_calls)) // Do not use isset() because it would falsely say that cache doesn't exist if a previous call had returned null / was void.
 		{
 			// A previous function call with the same parameters exists.
 			// Return the cached result
