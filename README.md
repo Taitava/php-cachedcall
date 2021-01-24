@@ -172,10 +172,32 @@ class Page
 {
   use Taitava\CachedCall\CachedCallTrait;
 
-  protected $enable_cached_calls = false; // Disable cache for all non-static methods (of a specific instance).
-  protected static $enable_cached_static_calls = false; // Disable cache for all static methods of this class.
+  public function method1($parameter)
+  {
+    $this->enable_cached_calls = false; // Disable cache
+    $result = $this->cached_call(__METHOD__, func_get_args(), function ()
+    {
+      // ...
+      // Do something...
+      // ...
+      return $result
+    });
+    $this->enable_cached_calls = true; // Re-enable cache
+    return $result;
+  }
 
-  // ...
+  public static function method2($parameter)
+  {
+    static::$enable_cached_static_calls = false; // Disable cache
+    $result = $this->cached_call(__METHOD__, func_get_args(), function ()
+    {
+      // ...
+      // Do something...
+      // ...
+      return $result
+    });
+    static::$enable_cached_static_calls = true; // Re-enable cache
+  }
 }
 ```
 
