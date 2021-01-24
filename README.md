@@ -17,11 +17,18 @@ Use composer:
 composer require "taitava/php-cachedcall:*"
 ```
 
+Then somewhere in your php application include the autoloader:
+```php
+require_once "vendor/autoload.php";
+```
+
 # Usage
 
 Say you have a class `Page` like this:
 
 ```php
+require_once "vendor/autoload.php";
+
 class Page
 {
   public $template = "page_template.html";
@@ -64,6 +71,8 @@ class Page
 So we have two methods (plus a contructor) and we would like to cache both of them in order to avoid rerunning code if the methods get called multiple times with same parameters. Our code transforms to this:
 
 ```php
+require_once "vendor/autoload.php";
+
 class Page
 {
   use Taitava\CachedCall\CachedCallTrait; // Apply the trait for this class.
@@ -134,6 +143,8 @@ This limitation is in place because generating a cache key needs to be a fast pr
 To overcome some of the limitations, you can for example bypass an array parameter like this:
 
 ```php
+require_once "vendor/autoload.php";
+
 class Page
 {
   use Taitava\CachedCall\CachedCallTrait; // Apply the trait for this class.
@@ -168,6 +179,8 @@ Note that we avoided passing `$an_array` to `cached_call()`, but we passed it to
 If you need to quickly test your class without caching, you can alter the following properties:
 
 ```php
+require_once "vendor/autoload.php";
+
 class Page
 {
   use Taitava\CachedCall\CachedCallTrait;
