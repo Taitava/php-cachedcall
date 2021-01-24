@@ -29,7 +29,7 @@ trait CachedCallTrait
 	 * @param callable $call A function that will be called if the result cannot be found from cache. This is usually a closure function.
 	 * @param bool $enable_cache Defaults to true. If you want to temporarily test your code without cache, you can set this to false, in which case $call will be called but the result will not be stored.
 	 * @return mixed Returns whatever $call returns.
-	 * @throws Exception
+	 * @throws CacheKeyGeneratingException
 	 */
 	protected function cached_call($method_name, $parameters, $call, $enable_cache = true)
 	{
@@ -64,7 +64,7 @@ trait CachedCallTrait
 	 * @param callable $call A function that will be called if the result cannot be found from cache. This is usually a closure function.
 	 * @param bool $enable_cache Defaults to true. If you want to temporarily test your code without cache, you can set this to false, in which case $call will be called but the result will not be stored.
 	 * @return mixed Returns whatever $call returns.
-	 * @throws Exception
+	 * @throws CacheKeyGeneratingException
 	 */
 	protected static function cached_static_call($method_name, $parameters, $call, $enable_cache = true)
 	{
@@ -97,7 +97,7 @@ trait CachedCallTrait
 	 * @param string $method_name
 	 * @param array $parameters
 	 * @return string
-	 * @throws Exception
+	 * @throws CacheKeyGeneratingException
 	 */
 	private static function _cache_key($method_name, $parameters)
 	{
@@ -113,7 +113,7 @@ trait CachedCallTrait
 			{
 				// The parameter is an array
 				// Do not accept this because I haven't decided how to handle arrays performance-wise: should they be iterated (can be bad if the array is big) or what?
-				throw new Exception(__METHOD__ . ": Caching method calls with an array as a parameter is not supported.");
+				throw new CacheKeyGeneratingException(__METHOD__ . ": Caching method calls with an array as a parameter is not supported.");
 			}
 			elseif (is_object($parameter))
 			{
@@ -131,14 +131,14 @@ trait CachedCallTrait
 				if (null === $identifier)
 				{
 					// The object does not have an identifier that we would recognise.
-					throw new Exception(__METHOD__ . ": Caching method calls with an object as a parameter is not supported. Exception: An object that would have an ID property is supported, but the passed object does not have it.");
+					throw new CacheKeyGeneratingException(__METHOD__ . ": Caching method calls with an object as a parameter is not supported. Exception: An object that would have an ID property is supported, but the passed object does not have it.");
 				}
 				// We have an identifier
 				$cache_key_parts[] = get_class($parameter) . "#" . $identifier;
 			}
 			else
 			{
-				throw new Exception(__METHOD__ . ": Caching method calls is not supported with a parameter variable of this type: " . gettype($parameter));
+				throw new CacheKeyGeneratingException(__METHOD__ . ": Caching method calls is not supported with a parameter variable of this type: " . gettype($parameter));
 			}
 		}
 		return implode(" | ", $cache_key_parts);
