@@ -49,27 +49,7 @@ trait CachedCallTrait
 	 */
 	protected function cached_call($method_name, $parameters, $call)
 	{
-		if (!$this->enable_cached_calls)
-		{
-			// Caching is disabled for i.e. temporary testing
-			return call_user_func_array($call, $parameters);
-		}
-		
-		// Check if we already have a cached result
-		$cache_key = CacheHelper::cache_key($method_name, $parameters);
-		if (array_key_exists($cache_key, $this->_cached_calls)) // Do not use isset() because it would falsely say that cache doesn't exist if a previous call had returned null / was void.
-		{
-			// A previous function call with the same parameters exists.
-			// Return the cached result
-			return $this->_cached_calls[$cache_key];
-		}
-		else
-		{
-			// No cache result was found
-			// Call the function and cache the result
-			$this->_cached_calls[$cache_key] = call_user_func_array($call, $parameters);
-			return $this->_cached_calls[$cache_key];
-		}
+		return CacheHelper::do_cached_call($method_name, $parameters, $call, $this->enable_cached_calls, $this->_cached_calls);
 	}
 	
 	/**
@@ -83,27 +63,7 @@ trait CachedCallTrait
 	 */
 	protected static function cached_static_call($method_name, $parameters, $call)
 	{
-		if (static::$enable_cached_static_calls)
-		{
-			// Caching is disabled for i.e. temporary testing
-			return call_user_func_array($call, $parameters);
-		}
-		
-		// Check if we already have a cached result
-		$cache_key = CacheHelper::cache_key($method_name, $parameters);
-		if (array_key_exists($cache_key, static::$_cached_static_calls)) // Do not use isset() because it would falsely say that cache doesn't exist if a previous call had returned null / was void.
-		{
-			// A previous function call with the same parameters exists.
-			// Return the cached result
-			return static::$_cached_static_calls[$cache_key];
-		}
-		else
-		{
-			// No cache result was found
-			// Call the function and cache the result
-			static::$_cached_static_calls[$cache_key] = call_user_func_array($call, $parameters);
-			return static::$_cached_static_calls[$cache_key];
-		}
+		return CacheHelper::do_cached_call($method_name, $parameters, $call, static::$enable_cached_static_calls, static::$_cached_static_calls);
 	}
 	
 }

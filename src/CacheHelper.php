@@ -12,6 +12,44 @@ class CacheHelper
 	/**
 	 * @internal Meant to be called only from inside Taitava\CachedCall package.
 	 *
+	 * Contains the internal logic used by both CachedCallTrait::cached_call() and CachedCallTrait::cached_static_call() .
+	 *
+	 * @param string $method_name
+	 * @param array $parameters
+	 * @param callable $call
+	 * @param bool $enable_cache
+	 * @param array $cache_array Passed by reference.
+	 * @return mixed
+	 * @throws CacheKeyGeneratingException
+	 */
+	public static function do_cached_call($method_name, $parameters, $call, $enable_cache, &$cache_array)
+	{
+		if (!$enable_cache)
+		{
+			// Caching is disabled for i.e. temporary testing
+			return call_user_func_array($call, $parameters);
+		}
+		
+		// Check if we already have a cached result
+		$cache_key = static::cache_key($method_name, $parameters);
+		if (array_key_exists($cache_key, $cache_array)) // Do not use isset() because it would falsely say that cache doesn't exist if a previous call had returned null / was void.
+		{
+			// A previous function call with the same parameters exists.
+			// Return the cached result
+			return $cache_array[$cache_key];
+		}
+		else
+		{
+			// No cache result was found
+			// Call the function and cache the result
+			$cache_array[$cache_key] = call_user_func_array($call, $parameters);
+			return $cache_array[$cache_key];
+		}
+	}
+	
+	/**
+	 * @internal Meant to be called only from inside Taitava\CachedCall package.
+	 *
 	 * @param string $method_name
 	 * @param array $parameters
 	 * @return string
