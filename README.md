@@ -117,7 +117,6 @@ Both `cached_call()` and `cached_static_call()` have a similar set of parameters
  - string `$method_name`: Name of the method from which you call `cached_call()`/`cached_static_call()`. You can use `__METHOD__`. Part of the cache key.
  - array `$parameters`: Any parameters you want to pass to $call function. Will also be part of the cache key. Use `func_get_args()` if you don't need to alter the parameters in any way.
  - callable `$call`: A function that will be called **if** no cache with a matching `$method_name`+`$parameters` cache key was found.
- - boolean `$enable_cache`: Defaults to true. Set to false if you want to temporarily test your code without caching.
 
 ## Limitations regarding `$parameters`
 Please note that the `$parameters` can only contain:
@@ -163,6 +162,22 @@ class Page
 ```
 
 Note that we avoided passing `$an_array` to `cached_call()`, but we passed it to our closure function with the `use ($an_array)` statement! So we are able to use the array in it's original form.
+
+## Temporarily disabling the cache
+
+If you need to quickly test your class without caching, you can alter the following properties:
+
+```php
+class Page
+{
+  use Taitava\CachedCall\CachedCallTrait;
+
+  protected $enable_cached_calls = false; // Disable cache for all non-static methods (of a specific instance).
+  protected static $enable_cached_static_calls = false; // Disable cache for all static methods of this class.
+
+  // ...
+}
+```
 
 # Contributing
 Ideas, bug reports and pull requests of fixes and new features are all welcome :).

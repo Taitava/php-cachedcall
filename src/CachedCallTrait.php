@@ -5,6 +5,23 @@ namespace Taitava\CachedCall;
 trait CachedCallTrait
 {
 	/**
+	 * Whether cached_call() should store the call results to cache - usually it should. This can
+	 * be set to false to test/debug things without caching.
+	 *
+	 * @var bool
+	 */
+	
+	protected $enable_cached_calls = true;
+	
+	/**
+	 * Whether cached_static_call() should store the call results to cache - usually it should. This can
+	 * be set to false to test/debug things without caching.
+	 *
+	 * @var bool
+	 */
+	protected static $enable_cached_static_calls = true;
+	
+	/**
 	 * Method call results related to a specific instance of a class. These come from non-static methods.
 	 *
 	 * @internal Do not access directly from outside of the CachedCall trait.
@@ -27,13 +44,12 @@ trait CachedCallTrait
 	 * @param string $method_name Will be used as a part of a cache key.
 	 * @param array $parameters Will be passed to $call and will also be used as part of the cache key. Note that because of the latter, only scalars and objects with an ID property can be passed as parameters!
 	 * @param callable $call A function that will be called if the result cannot be found from cache. This is usually a closure function.
-	 * @param bool $enable_cache Defaults to true. If you want to temporarily test your code without cache, you can set this to false, in which case $call will be called but the result will not be stored.
 	 * @return mixed Returns whatever $call returns.
 	 * @throws CacheKeyGeneratingException
 	 */
-	protected function cached_call($method_name, $parameters, $call, $enable_cache = true)
+	protected function cached_call($method_name, $parameters, $call)
 	{
-		if (!$enable_cache)
+		if (!$this->enable_cached_calls)
 		{
 			// Caching is disabled for i.e. temporary testing
 			return call_user_func_array($call, $parameters);
@@ -62,13 +78,12 @@ trait CachedCallTrait
 	 * @param string $method_name Will be used as a part of a cache key.
 	 * @param array $parameters Will be passed to $call and will also be used as part of the cache key. Note that because of the latter, only scalars and objects with an ID property can be passed as parameters!
 	 * @param callable $call A function that will be called if the result cannot be found from cache. This is usually a closure function.
-	 * @param bool $enable_cache Defaults to true. If you want to temporarily test your code without cache, you can set this to false, in which case $call will be called but the result will not be stored.
 	 * @return mixed Returns whatever $call returns.
 	 * @throws CacheKeyGeneratingException
 	 */
-	protected static function cached_static_call($method_name, $parameters, $call, $enable_cache = true)
+	protected static function cached_static_call($method_name, $parameters, $call)
 	{
-		if (!$enable_cache)
+		if (static::$enable_cached_static_calls)
 		{
 			// Caching is disabled for i.e. temporary testing
 			return call_user_func_array($call, $parameters);
