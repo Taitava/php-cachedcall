@@ -32,7 +32,7 @@ class CacheHelper
 		
 		// Check if we already have a cached result
 		$cache_key = static::cache_key($method_name, $parameters);
-		if (array_key_exists($cache_key, $cache_array)) // Do not use isset() because it would falsely say that cache doesn't exist if a previous call had returned null / was void.
+		if (static::is_call_cached($cache_key, $cache_array))
 		{
 			// A previous function call with the same parameters exists.
 			// Return the cached result
@@ -45,6 +45,16 @@ class CacheHelper
 			$cache_array[$cache_key] = call_user_func_array($call, $parameters);
 			return $cache_array[$cache_key];
 		}
+	}
+	
+	/**
+	 * @param string $cache_key
+	 * @param array $cache_array
+	 * @return bool
+	 */
+	public static function is_call_cached($cache_key, array $cache_array)
+	{
+		return array_key_exists($cache_key, $cache_array);  // Do not use isset() because it would falsely say that cache doesn't exist if a previous call had returned null / was void.
 	}
 	
 	/**

@@ -11,9 +11,13 @@
   "require": {
     "php": "^7.0"
   },
+  "require-dev": {
+    "phpunit/phpunit": "*"
+  },
   "autoload": {
     "psr-4": {
-      "Taitava\\CachedCall\\": "src"
+      "Taitava\\CachedCall\\": "src",
+      "Taitava\\CachedCall\\Tests\\": "tests"
     }
   }
 }

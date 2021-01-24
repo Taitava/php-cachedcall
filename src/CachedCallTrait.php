@@ -66,4 +66,38 @@ trait CachedCallTrait
 		return CacheHelper::do_cached_call($method_name, $parameters, $call, static::$enable_cached_static_calls, static::$_cached_static_calls);
 	}
 	
+	/**
+	 * Checks if a previous call result with the given method name and a set of parameters can be found from the cache.
+	 * Good for testing.
+	 *
+	 * @param string $method_name
+	 * @param array $parameters
+	 * @return bool
+	 * @throws CacheKeyGeneratingException
+	 */
+	protected function is_call_cached($method_name, $parameters)
+	{
+		return CacheHelper::is_call_cached(
+			CacheHelper::cache_key($method_name, $parameters),
+			$this->_cached_calls
+		);
+	}
+	
+	/**
+	 * Checks if a previous call result with the given static method name and a set of parameters can be found from the cache.
+	 * Good for testing.
+	 *
+	 * @param string $method_name
+	 * @param array $parameters
+	 * @return bool
+	 * @throws CacheKeyGeneratingException
+	 */
+	protected static function is_static_call_cached($method_name, $parameters)
+	{
+		return CacheHelper::is_call_cached(
+			CacheHelper::cache_key($method_name, $parameters),
+			static::$_cached_static_calls
+		);
+	}
+	
 }
